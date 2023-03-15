@@ -99,7 +99,7 @@ def embed_and_upsert(papers, index_name, model, batch_size=100):
 if __name__ == "__main__":
     # parse command line flag
     parser = argparse.ArgumentParser()
-    parser.add_argument("--no_confirmation", action="store_true")
+    parser.add_argument("--no-confirmation", action="store_true")
     args = parser.parse_args()
     no_confirmation = args.no_confirmation
     
@@ -122,9 +122,13 @@ if __name__ == "__main__":
     # aren't appended to the file, identifying them are like finding a needle in
     # a haystack. here, we take the easy route and simply ignore them.
     est_num_new = len(papers) - pinecone_embedding_count(index_name)
+    assert est_num_new > 0, "No new papers. Aborting..."
     papers = papers[-est_num_new:]
     index = pinecone.Index(index_name)
-    num_exist = len(index.fetch([p.id for p in papers])["vectors"])
+    chunk_size, num_exist = 1000, 0
+    chunks = [papers[i:i+chunk_size] for i in range(0, len(papers), chunk_size)]
+    for chunk in chunks:
+        num_exist += len(index.fetch([p.id for p in chunk])["vectors"])
     num_new = est_num_new - num_exist
     assert num_new > 0, "No new papers. Aborting..."
     papers = papers[-num_new:]
