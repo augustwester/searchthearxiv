@@ -1,4 +1,7 @@
-FROM public.ecr.aws/lambda/python:3.10
+FROM python:3.10.6-slim
+
+RUN apt-get update
+RUN apt-get -y install unzip
 
 COPY requirements.txt .
 COPY paper.py .
