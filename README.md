@@ -1,3 +1,3 @@
 ![searchthearXiv](.github/logo.png)
 
-Scripts for fetching arXiv data, embedding papers, and storing embeddings a Pinecone vector database.
+This repo contains the implementation of [searchthearxiv.com](https://searchthearxiv.com), a simple semantic search engine for more than 250,000 ML papers on arXiv (and counting). The code is separated into two parts, `app` and `data`. `app` contains the implementation of both the frontend and backend of the web app, while `data` is responsible for updating the database at regular intervals using OpenAI and Pinecone. Both `app` and `data` contain a Dockerfile for easy deployment to cloud platforms. I don't expect (or encourage) anyone to run a clone of the project on their own (that would be weird), but it might serve as inspiration for people building a similar type of semantic search engine.
