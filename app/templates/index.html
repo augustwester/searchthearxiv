@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-XP8T80NGPG"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'G-XP8T80NGPG');
+	</script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="A simple semantic search engine for ML papers on arXiv">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:description" content="A simple semantic search engine for ML papers on arXiv">
+	<meta name="twitter:title" content="search the arXiv">
+	<meta name="twitter:image" content="https://searchthearxiv.com/static/card-image.png">
+
+	<meta property="og:title" content="search the arXiv">
+	<meta property="og:url" content="https://searchthearxiv.com">
+	<meta property="og:image" content="https://searchthearxiv.com/static/card-image.png">
+
+	<title>search the arXiv</title>
+
+	<link rel="icon" type="image/x-icon" href="static/favicon.png">
+	<link rel="stylesheet" type="text/css" href="static/styles.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+	<link rel=preload href="/static/go-to-symbol.svg" as=image>
+	<link rel=preload href="/static/similarity-symbol.svg" as=image>
+	<link rel=preload href="/static/error-symbol.svg" as=image>
+	<link rel=preload href="/static/info-symbol.svg" as=image>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+	<script src="/static/script.js"></script>
+</head>
+<body>
+	<div id="header">
+		<a id="logo" href="/"><span class="black">search</span><span class="gray">the</span><span class="red">arXiv</span></a>
+		<div id="right_header">
+			<a class="header_link" href="about"><span class="black">about</span></a>
+		</div>
+	</div>
+	<div id="container">
+		<textarea id="query_field" class="placeholder_hidden" name="query" autocapitalize="off" placeholder='e.g. "model using only attention mechanism"'></textarea>
+		<p id="tip">Insert an arXiv link to find similar papers or use natural language to describe what you are looking for.</p>
+		<div id="error_container">
+			<div id="error_flex">
+				<div id="error_symbol"></div>
+				<p id="error_text">Error</p>
+			</div>
+		</div>
+		<div id="toggle_container">
+			<div id="toggle_flex">
+				<div class="toggle toggle_enabled" data-tab="papers">
+					<p>Papers</p>
+				</div>
+				<div class="toggle toggle_disabled" data-tab="people">
+					<p>People</p>
+				</div>
+			</div>
+		</div>
+		<div id="results"></div>
+	</div>
+</body>
+</html>

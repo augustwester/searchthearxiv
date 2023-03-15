@@ -1,0 +1,570 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@300;400;500&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+p, a {
+    font-family: "Roboto";
+}
+
+#toggle_container {
+    transition-property: opacity;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.4s;
+    opacity: 0;
+}
+
+.appear {
+    opacity: 1 !important;
+}
+
+#toggle_flex {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 780px;
+}
+
+.toggle {
+    padding: 5px 10px 5px 10px;
+    display: inline-block;
+    min-width: 70px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.25);
+}
+
+.toggle p {
+    font-family: "Roboto Mono";
+    font-size: 14px;
+    font-weight: medium;
+    color: white;
+    text-align: center;
+}
+
+.toggle_enabled {
+    background-color: black;
+}
+
+#header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    margin: 10px 30px 0 30px;
+}
+
+#right_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 30px;
+    align-items: center;
+    height: inherit;
+}
+
+#logo {
+    text-decoration: none;
+    font-family: "Roboto Mono";
+    font-weight: medium;
+    font-size: 18px;
+    color: black;
+}
+
+.mono {
+    font-family: "Roboto Mono";
+}
+
+.black {
+    color: black;
+}
+
+.gray {
+    color: lightgray;
+}
+
+.red {
+    color: rgba(165,44,37,1);
+}
+
+.header_link {
+    font-weight: medium;
+    font-size: 16px;
+    color: black;
+    text-decoration: none;
+}
+
+.header_link:hover {
+    text-decoration: underline;
+}
+
+#container {
+    max-width: 830px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 75px;
+}
+
+@keyframes change_color {
+    0% { color: black; }
+    50% { color: lightgray; }
+    100% { color: black; }
+}
+
+@keyframes move_up {
+	from {
+		translate: 0 10px;
+		opacity: 0;
+	} to {
+		translate: 0 0;
+		opacity: 1;
+	}
+}
+
+#query_field {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    font-family: "Roboto Mono";
+    font-size: 24px;
+    outline: none;
+    margin: 0 auto;
+    border: none;
+    text-align: center;
+    resize: none;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+}
+
+#query_field::placeholder {
+    color: rgba(0,0,0,0.3);
+}
+
+.placeholder_hidden::placeholder {
+    color: rgba(0,0,0,0) !important;
+}
+
+#tip {
+    font-family: "Roboto Mono";
+    font-size: 12px;
+    text-align: center;
+    color: gray;
+    margin-top: 50px;
+}
+
+#error_container {
+    display: none;
+    margin-bottom: 50px;
+}
+
+#error_flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+#error_symbol {
+    width: 20px;
+    height: 20px;
+    background-image: url(/static/error-symbol.svg);
+    background-size: cover;
+}
+
+#error_text {
+    font-family: "Roboto Mono";
+    color: rgb(255,59,48);
+    text-align: left;
+}
+
+#results {
+    max-width: 100%;
+    margin: 0 auto;
+    transition-property: transform, opacity;
+    transform: translateY(10px);
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.4s;
+    opacity: 0;
+    margin-bottom: 50px;
+}
+
+.move_up {
+    transform: translateY(0px) !important;
+    opacity: 1 !important;
+}
+
+.search_result {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 25px;
+    border: 1px solid rgb(215,215,215);
+    max-width: 780px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 50px;
+}
+
+.result_clickable {
+    cursor: pointer;
+}
+
+.result_clickable:hover {
+    background-color: rgba(0,0,0,0.015);
+}
+
+.result_top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.result_year {
+    font-weight: medium;
+    font-size: 16px;
+    color: darkgray;
+}
+
+.result_score {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 12px;
+    font-weight: medium;
+    gap: 5px;
+}
+
+.result_dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+}
+
+.dot_green {
+    background-color: rgb(100,215,102);
+}
+
+.dot_orange {
+    background-color: rgb(241,146,54);
+}
+
+.result_title {
+    display: block;
+    font-weight: bold;
+    font-size: 24px;
+    color: black;
+}
+
+.result_authors {
+    font-weight: medium;
+    font-size: 16px;
+    color: darkgray;
+    margin-bottom: 10px;
+}
+
+.result_abstract {
+    font-weight: thin;
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.truncated_text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.result_button_container {
+    display: none;
+    width: 100%;
+    height: 48px;
+    margin-top: 20px;
+}
+
+.result_button_flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.result_button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    padding: 10px;
+    border: 1px solid black;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.result_button:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.search_result a {
+    text-decoration: none;
+}
+
+.go_to_symbol {
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    -webkit-mask-image: url(/static/go-to-symbol.svg);
+    mask-image: url(/static/go-to-symbol.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
+.similarity_symbol {
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    -webkit-mask-image: url(/static/similarity-symbol.svg);
+    mask-image: url(/static/similarity-symbol.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
+.result_button p {
+    font-weight: medium;
+    font-size: 14px;
+    color: black;
+}
+
+#authors_flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    row-gap: 50px;
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.author_container {
+    width: 49%;
+    padding: 25px;
+    border: 1px solid rgb(215,215,215);
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box;
+}
+
+.author_top_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.author_name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.num_papers_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.author_num_papers_info_symbol {
+    width: 16px;
+    height: 16px;
+    -webkit-mask-image: url(/static/info-symbol.svg);
+    mask-image: url(/static/info-symbol.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    background-color: rgb(0,0,0,0.15);
+}
+
+.author_num_papers {
+    font-size: 16px;
+    font-weight: medium;
+}
+
+.author_paper {
+    display: block;
+    font-size: 16px;
+    font-weight: medium;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    color: gray;
+    margin-top: 10px;
+    text-decoration: underline;
+}
+
+.info_container {
+    border: 1px solid rgba(0,0,0,0.1);
+    position: absolute;
+    width: 200px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    display: none;
+    box-shadow:0 10px 10px rgba(0,0,0,0.05);
+}
+
+.info_container p {
+    text-align: center;
+    font-size: 12px; 
+}
+
+#about_title {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.about_text, li {
+    margin-top: 20px;
+    font-size: 20px;
+    line-height: 36px;
+}
+
+.about_text a {
+    color: rgba(165,44,37,1);
+}
+
+.code {
+    font-family: "Roboto Mono", monospace;
+    padding:2px;
+    background-color:rgb(250,250,250);
+    border: 1px solid rgba(0,0,0,0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: black;
+    }
+
+    .black {
+        color: white;
+    }
+
+    .gray {
+        color: rgba(255,255,255,0.4)
+    }
+
+    #query_field {
+        background-color: black;
+        color: white;
+    }
+
+    #query_field::placeholder {
+        color: rgba(255,255,255,0.3);
+    }
+
+    #error_text {
+        color: rgb(255,69,58);
+    }
+
+    .toggle {
+        background-color: rgba(255,255,255,0.35);
+    }
+
+    .toggle p {
+        color: black;
+    }
+    
+    .toggle_enabled {
+        background-color: white;
+    }
+
+    .search_result {
+        border: 1px solid rgb(115,115,115);
+    }
+
+    .result_clickable:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    .result_button {
+        border: 1px solid white;
+    }
+
+    .result_button:hover {
+        background-color: rgba(255,255,255,0.15);
+    }
+
+    .go_to_symbol {
+        background-color: white;
+    }
+    
+    .similarity_symbol {
+        background-color: white;
+    }
+    
+    .result_button p {
+        color: white;
+    }
+
+    .author_num_papers_info_symbol {
+        background-color: rgba(255,255,255,0.35);
+    }
+
+    .info_container {
+        border: 1px solid black;
+        box-shadow: none;
+        background-color: rgb(50,50,50);
+    }
+
+    .code {
+        background-color:rgba(250,250,250, 0.25);
+        border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    @keyframes change_color {
+        0% { color: white; }
+        50% { color: rgba(255,255,255,0.4); }
+        100% { color: white; }
+    }
+}
+
+@media screen and (max-width:768px) {
+    #error_flex {
+        flex-direction: column;
+    }
+
+    #error_text {
+        text-align: center;
+    }
+
+    #authors_flex {
+        flex-direction: column;
+    }
+    
+    .author_container {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:375px) {
+    .result_button_flex {
+        gap: 5px;
+    }
+}

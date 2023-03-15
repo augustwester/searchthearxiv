@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    
+    <title>search the arXiv | about</title>
+
+    <link rel="icon" type="image/x-icon" href="static/favicon.png">
+    <link rel= "stylesheet" type= "text/css" href="static/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header">
+      <a id="logo" href="/"><span class="black">search</span><span class="gray">the</span><span class="red">arXiv</span></a>
+      <div id="right_header">
+        <a class="header_link" href="about"><span class="black">about</span></a>
+      </div>
+    </div>
+    <div id="container" style="margin-bottom:50px;">
+      <p id="about_title" class="black">about</p>
+      <p class="about_text black">search the arXiv uses OpenAI's <span class="code">text-embedding-ada-002</span> model to embed the abstract of over 250,000 machine learning papers from arXiv. The papers are regularly sourced from the <a href="https://www.kaggle.com/datasets/Cornell-University/arxiv">arXiv metadataset over on Kaggle</a> and filtered to include only those belonging to</p>
+      <p class="about_text black">
+        cs.CV, cs.LG, cs.CL, cs.AI, cs.NE, cs.RO
+      </p>
+      <p class="about_text black">When you perform a search, your query is embedded using the same model after which the 10 papers with the highest cosine similarity to the query embedding are returned.</p>
+      <p class="about_text black">This is a personal project meant as an experiment more than anything else. I would love to know if you find it useful. You can find me on <a href="https://twitter.com/augustwester" target="_blank">Twitter</a> and <a href="https://github.com/augustwester" target="_blank">GitHub</a> 🤗</p>
+    </div>
+  </body>
+</html>

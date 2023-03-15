@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="580px" height="577px" viewBox="0 0 580 577" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="go-light" transform="translate(-222.000000, -202.000000)">
+            <g id="Group" transform="translate(257.000000, 234.060004)">
+                <polyline id="Path" stroke="#000000" stroke-width="70" points="487 230.939996 487 509.939996 0 509.939996 0 22.9399964 279 22.9399964"></polyline>
+                <path id="Line" d="M511.138038,1.47445318 L437.426052,217.313613 L379.87,158.906 L209.577825,326.716387 L195.332212,340.754282 L167.256421,312.263056 L181.502034,298.225161 L351.795,130.415 L294.239518,72.0083602 L511.138038,1.47445318 Z" transform="translate(353.480198, 156.974453) rotate(-0.535459) translate(-353.480198, -156.974453) " fill="#000000" fill-rule="nonzero"></path>
+                <rect id="Rectangle" fill="#000000" transform="translate(274.341360, 236.533665) rotate(-45.000000) translate(-274.341360, -236.533665) " x="144.34136" y="206.533665" width="260" height="60"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
