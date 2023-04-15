@@ -12,9 +12,9 @@ PINECONE_API_KEY=your_pinecone_api_key
 PINECONE_INDEX_NAME=your_pinecone_index_name
 ```
 
-The Kaggle username and API key are required to fetch the [arXiv metadataset](https://www.kaggle.com/datasets/Cornell-University/arxiv) maintained (and updated weekly) by Cornell University. The OpenAI API key is used to embed new papers using the `text-embedding-ada-002` model. The Pinecone API key and index name are used to connect to the index (i.e. vector database) hosted on Pinecone.
+The Kaggle username and API key are required to fetch the [arXiv metadataset](https://www.kaggle.com/datasets/Cornell-University/arxiv) maintained (and updated monthly) by Cornell University. The OpenAI API key is used to embed new papers using the `text-embedding-ada-002` model. The Pinecone API key and index name are used to connect to the index (i.e. vector database) hosted on Pinecone.
 
-If you are only interested in the embeddings, I have published [the full dataset on Kaggle](https://www.kaggle.com/datasets/awester/arxiv-embeddings). The current size is around 10GB but grows slightly every week as new papers are added.
+If you are only interested in the embeddings, I have published [the full dataset on Kaggle](https://www.kaggle.com/datasets/awester/arxiv-embeddings). The current size is around 10GB but grows slightly every month as new papers are added.
 
 If, for some reason, you still want to embed the papers on your own, you can run `embed.py` in `data` after downloading the metadataset from Kaggle, setting the environment variables, and creating a Pinecone index. If you don't want to use Pinecone, you are free to modify the code however you want. Since the index will initially be empty, the script will embed all ML papers (again, more than 250,000). However, before doing so, it will estimate a price using OpenAI's [tiktoken](https://github.com/openai/tiktoken) tokenizer and ask you to confirm. You can skip this step by running `python3 embed.py --no-confirmation`.
 
