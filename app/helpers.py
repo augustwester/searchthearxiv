@@ -7,7 +7,9 @@ def fetch_abstract(url):
     session = HTMLSession()
     r = session.get(url)
     content = r.html.find("#content-inner", first=True)
-    abstract = content.find(".abstract", first=True)
+    abstract = content.find(".abstract", first=True).text
+    if abstract[:10] == "Abstract: ":
+        abstract = abstract[10:]
     return abstract
 
 def avg_score(papers):
