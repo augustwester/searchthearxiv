@@ -12,7 +12,7 @@ PINECONE_API_KEY=your_pinecone_api_key
 PINECONE_INDEX_NAME=your_pinecone_index_name
 ```
 
-The Kaggle username and API key are required to fetch the [arXiv metadataset](https://www.kaggle.com/datasets/Cornell-University/arxiv) maintained (and updated weekly) by Cornell University. The OpenAI API key is used to embed new papers using the `text-embedding-ada-002` model. The Pinecone API key and index name are used to connect to the index (i.e. vector database) hosted on Pinecone.
+The Kaggle username and API key are required to fetch the [arXiv metadataset](https://www.kaggle.com/datasets/Cornell-University/arxiv), maintained (and updated weekly) by Cornell University. The OpenAI API key is used to embed new papers using the `text-embedding-ada-002` model. The Pinecone API key and index name are used to connect to the index (i.e. vector database) hosted on Pinecone.
 
 If you are only interested in the embeddings, I have published [the full dataset on Kaggle](https://www.kaggle.com/datasets/awester/arxiv-embeddings). The current size is around 10GB but grows slightly every week as new papers are added.
 
