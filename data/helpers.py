@@ -1,7 +1,8 @@
 import json
 import openai
+import os
 import tiktoken
-import pinecone
+from pinecone import Pinecone
 from tqdm import tqdm
 from paper import Paper
 
@@ -35,7 +36,8 @@ def pinecone_embedding_count(index_name):
     Returns:
         The total number of embeddings stored in the Pinecone index.
     """
-    index = pinecone.Index(index_name)
+    pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+    index = pc.Index(index_name)
     return index.describe_index_stats()["total_vector_count"]
 
 def estimate_embedding_price(papers, price_per_1k):
@@ -73,7 +75,7 @@ def get_embeddings(texts, model="text-embedding-ada-002"):
     embed_data = openai.Embedding.create(input=texts, model=model)
     return embed_data["data"]
 
-def embed_and_upsert(papers, index_name, model, batch_size=100):
+def embed_and_upsert(papers, index_name, model, batch_size=50):
     """
     Embeds the embedding text of each paper in `papers` using the embedding
     model specified in `model`. The embeddings are then upserted to the Pinecone
@@ -85,7 +87,8 @@ def embed_and_upsert(papers, index_name, model, batch_size=100):
         model: The name of the OpenAI embedding model to use
         batch_size: The batch size to use when upserting embeddings to Pinecone
     """
-    with pinecone.Index(index_name, pool_threads=5) as index:
+    pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+    with pc.Index(index_name, pool_threads=5) as index:
         for i in tqdm(range(0, len(papers), batch_size)):
             batch = papers[i:i+batch_size]
             texts = [paper.embedding_text for paper in batch]

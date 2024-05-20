@@ -1,7 +1,7 @@
 import argparse
 import openai
 import os
-import pinecone
+from pinecone import Pinecone
 from helpers import load_data, pinecone_embedding_count, estimate_embedding_price, embed_and_upsert
 
 if __name__ == "__main__":
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     
     # connect to OpenAI and Pinecone
     openai.api_key = os.environ["OPENAI_API_KEY"]
-    pinecone.init(api_key=os.environ["PINECONE_API_KEY"])
+    pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
     index_name = os.environ["PINECONE_INDEX_NAME"]
     
     # define constants
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     est_num_new = len(papers) - pinecone_embedding_count(index_name)
     assert est_num_new > 0, "No new papers. Aborting..."
     papers = papers[-est_num_new:]
-    index = pinecone.Index(index_name)
+    index = pc.Index(index_name)
     chunk_size, num_exist = 1000, 0
     chunks = [papers[i:i+chunk_size] for i in range(0, len(papers), chunk_size)]
     for chunk in chunks:

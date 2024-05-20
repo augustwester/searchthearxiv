@@ -1,6 +1,6 @@
 import os
 import json
-import pinecone
+from pinecone import Pinecone
 from paper import Paper
 from helpers import pinecone_embedding_count
 from tqdm import tqdm
@@ -30,7 +30,10 @@ papers = list(papers)[-num_new:]
 print("Adding new metadata and embeddings to dataset...")
 chunk_size = 1000
 chunks = [papers[i:i+chunk_size] for i in range(0, len(papers), chunk_size)]
-index = pinecone.Index(index_name)
+
+pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+index = pc.Index(index_name)
+
 for chunk in chunks:
     embeds = index.fetch([p["id"] for p in chunk])["vectors"]
     for paper in tqdm(chunk):
