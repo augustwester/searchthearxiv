@@ -1,12 +1,11 @@
 import flask
-import json
 import openai
 import os
-import pinecone
+from pinecone import Pinecone
 import validators
 from flask import render_template, request
 from openai.embeddings_utils import get_embedding
-from helpers import get_matches, get_authors, fetch_abstract, error
+from helpers import get_matches, fetch_abstract, error
 
 app = flask.Flask(__name__)
 
@@ -15,8 +14,8 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 MODEL = "text-embedding-ada-002"
 
 # connect to Pinecone
-pinecone.init(api_key=os.environ["PINECONE_API_KEY"])
-index = pinecone.Index("searchthearxiv")
+pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+index = pc.Index("search-the-arxiv")
 
 @app.route("/")
 def home():
