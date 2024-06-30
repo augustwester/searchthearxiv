@@ -37,8 +37,11 @@ index = pc.Index(index_name)
 for chunk in chunks:
     embeds = index.fetch([p["id"] for p in chunk])["vectors"]
     for paper in tqdm(chunk):
-        embed = embeds[paper["id"]]["values"]
-        paper["embedding"] = embed
+        if paper["id"] in embeds:
+            embed = embeds[paper["id"]]["values"]
+            paper["embedding"] = embed
+        else:
+            print(f"Unable to find paper with id '{paper['id']} in Pinecone'")
 
 with open(EMBEDDING_FILE_PATH, "a") as file:
     for paper in tqdm(papers):
