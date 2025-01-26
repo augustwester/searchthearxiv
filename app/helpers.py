@@ -36,7 +36,6 @@ def get_authors(papers):
                 "papers": [paper.__dict__ for paper in papers],
                 "avg_score": avg_score(papers)}
                 for author, papers in authors.items()]
-    authors = sorted(authors, key=lambda e: e["avg_score"], reverse=True)
     authors = sorted(authors, key=lambda e: len(e["papers"]), reverse=True)
     return authors[:10]
 
