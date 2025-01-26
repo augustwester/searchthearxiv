@@ -343,6 +343,16 @@ p, a {
     mask-size: cover;
 }
 
+.scholar_symbol {
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    -webkit-mask-image: url(/static/scholar-symbol.svg);
+    mask-image: url(/static/scholar-symbol.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
 .result_button p {
     font-weight: medium;
     font-size: 14px;
