@@ -211,6 +211,12 @@ function addPaper(result) {
             <p>Go to Paper</p>
         </div>
         </a>
+        <a href="https://scholar.google.com/scholar?q=arXiv:${result.id}" target="_blank">
+        <div class="result_button">
+            <div class="scholar_symbol"></div>
+            <p>Find on Scholar</p>
+        </div>
+        </a>
         <a href="/?q=${encodeURIComponent("https://arxiv.org/abs/" + result.id)}" target="_blank">
         <div class="result_button">
             <div class="similarity_symbol"></div>
