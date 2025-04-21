@@ -1,5 +1,4 @@
 import argparse
-import openai
 import os
 from pinecone import Pinecone
 from helpers import load_data, pinecone_embedding_count, estimate_embedding_price, embed_and_upsert
@@ -11,8 +10,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     no_confirmation = args.no_confirmation
     
-    # connect to OpenAI and Pinecone
-    openai.api_key = os.environ["OPENAI_API_KEY"]
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
     index_name = os.environ["PINECONE_INDEX_NAME"]
     

@@ -1,5 +1,5 @@
 import json
-import openai
+from openai import OpenAI
 import os
 import tiktoken
 from pinecone import Pinecone
@@ -56,7 +56,6 @@ def estimate_embedding_price(papers, price_per_1k):
     num_tokens = 0
     for paper in tqdm(papers):
         num_tokens += len(enc.encode(paper.embedding_text))
-    print(num_tokens)
     price = num_tokens / 1000 * price_per_1k
     return num_tokens, price
 
@@ -72,8 +71,8 @@ def get_embeddings(texts, model="text-embedding-ada-002"):
     Returns:
         A list of embeddings.
     """
-    embed_data = openai.Embedding.create(input=texts, model=model)
-    return embed_data["data"]
+    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    return client.embeddings.create(input=texts, model=model).data
 
 def embed_and_upsert(papers, index_name, model, batch_size=50):
     """
@@ -94,6 +93,6 @@ def embed_and_upsert(papers, index_name, model, batch_size=50):
             texts = [paper.embedding_text for paper in batch]
             embed_data = get_embeddings(texts, model)
         
-            pc_data = [(p.id, e["embedding"], p.metadata)
-                       for p, e in zip(batch, embed_data)]
+            pc_data = [(p.id, e.embedding, p.metadata)
+                       for p, e in zip(batch, embed_data, strict=True)]
             index.upsert(pc_data)
