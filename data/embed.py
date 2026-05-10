@@ -17,8 +17,8 @@ if __name__ == "__main__":
     JSON_FILE_PATH = "arxiv-metadata-oai-snapshot.json"
     CATEGORIES = ["cs.cv", "cs.lg", "cs.cl", "cs.ai", "cs.ne", "cs.ro"]
     START_YEAR = 2012
-    EMBED_MODEL = "text-embedding-ada-002"
-    PRICE_PER_1K = 0.0004
+    EMBED_MODEL = "text-embedding-3-small"
+    PRICE_PER_1K = 0.00002
 
     print("Loading data...")
     papers = list(load_data(JSON_FILE_PATH, CATEGORIES, START_YEAR))

@@ -1,5 +1,5 @@
 import flask
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError, RateLimitError, NotFoundError, APIError
 import os
 from pinecone import Pinecone
 import validators
@@ -9,11 +9,11 @@ from helpers import get_matches, fetch_abstract, error
 app = flask.Flask(__name__)
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
-MODEL = "text-embedding-ada-002"
+MODEL = "text-embedding-3-small"
 
 # connect to Pinecone
 pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
-index = pc.Index("search-the-arxiv")
+index = pc.Index("searchthearxiv-v2")
 
 @app.route("/")
 def home():
@@ -34,7 +34,11 @@ def search():
         matches = index.fetch([arxiv_id])["vectors"]
         if len(matches) == 0:
             abstract = fetch_abstract(query)
-            embed = client.embeddings.create(input=abstract, model=MODEL).data[0].embedding
+            try:
+                embed = client.embeddings.create(input=abstract, model=MODEL).data[0].embedding
+            except (AuthenticationError, RateLimitError, NotFoundError, APIError) as e:
+                print(f"OpenAI error when embedding abstract: {e}", flush=True)
+                return error("OpenAI not responding. Try again in a few minutes.")
             return get_matches(index, K, vector=embed, exclude=arxiv_id)
         return get_matches(index, K, id=arxiv_id, exclude=arxiv_id)
     
@@ -45,9 +49,21 @@ def search():
     # embed query using OpenAI API
     try:
         embed = client.embeddings.create(input=query, model=MODEL).data[0].embedding
-    except Exception as e:
-        print(f"Encountered error when fetching embedding from OpenAI: {e}", flush=True)
+    except AuthenticationError as e:
+        print(f"OpenAI authentication error: {e}", flush=True)
+        return error("OpenAI authentication failed. Please check the API key.")
+    except RateLimitError as e:
+        print(f"OpenAI rate limit error: {e}", flush=True)
+        return error("Rate limit exceeded. Try again in a few minutes.")
+    except NotFoundError as e:
+        print(f"OpenAI model not found: {e}", flush=True)
+        return error("Embedding model not found. Please contact the administrator.")
+    except APIError as e:
+        print(f"OpenAI API error: {e}", flush=True)
         return error("OpenAI not responding. Try again in a few minutes.")
+    except Exception as e:
+        print(f"Unexpected error when fetching embedding from OpenAI: {e}", flush=True)
+        return error("An unexpected error occurred. Try again in a few minutes.")
     
     # once we have the query embedding, find closest matches in Pinecone
     try:
