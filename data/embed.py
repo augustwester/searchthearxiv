@@ -21,25 +21,32 @@ if __name__ == "__main__":
     PRICE_PER_1K = 0.00002
 
     print("Loading data...")
-    papers = list(load_data(JSON_FILE_PATH, CATEGORIES, START_YEAR))
+    new_papers = list(load_data(JSON_FILE_PATH, CATEGORIES, START_YEAR))
     
     # a few papers are sometimes added to the dataset retroactively. since they
     # aren't appended to the file, identifying them are like finding a needle in
     # a haystack. here, we take the easy route and simply ignore them.
-    est_num_new = len(papers) - pinecone_embedding_count(index_name)
+    existing_count = pinecone_embedding_count(index_name)
+    est_num_new = len(new_papers) - existing_count
     assert est_num_new > 0, "No new papers. Aborting..."
-    papers = papers[-est_num_new:]
-    index = pc.Index(index_name)
-    chunk_size, num_exist = 1000, 0
-    chunks = [papers[i:i+chunk_size] for i in range(0, len(papers), chunk_size)]
-    for chunk in chunks:
-        num_exist += len(index.fetch([p.id for p in chunk])["vectors"])
-    num_new = est_num_new - num_exist
-    assert num_new > 0, "No new papers. Aborting..."
-    papers = papers[-num_new:]
+    new_papers = new_papers[-est_num_new:]
+
+    # if the index already has vectors, deduplicate by checking which papers
+    # are already stored. skip this entirely for an empty index.
+    if existing_count > 0:
+        index = pc.Index(index_name)
+        chunk_size, num_exist = 100, 0
+        chunks = [new_papers[i:i+chunk_size] for i in range(0, len(new_papers), chunk_size)]
+        for chunk in chunks:
+            num_exist += len(index.fetch([p.id for p in chunk]).vectors)
+        num_new = est_num_new - num_exist
+        assert num_new > 0, "No new papers. Aborting..."
+        new_papers = new_papers[-num_new:]
+    else:
+        num_new = est_num_new
     
     print(f"Estimating price of embedding {num_new} new papers...")
-    est_num_tokens, est_price = estimate_embedding_price(papers, PRICE_PER_1K)
+    est_num_tokens, est_price = estimate_embedding_price(new_papers, PRICE_PER_1K)
     
     print("Number of tokens for selected papers:", est_num_tokens)
     print(f"Estimated price: ${est_price}")
@@ -49,6 +56,6 @@ if __name__ == "__main__":
         assert confirm == "yes"
         
     print("Embedding and upserting...")
-    embed_and_upsert(papers, index_name, EMBED_MODEL)
+    embed_and_upsert(new_papers, index_name, EMBED_MODEL)
     
     print("✅ Retrieved and stored embeddings in Pinecone database")

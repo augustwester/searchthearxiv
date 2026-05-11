@@ -55,7 +55,7 @@ def estimate_embedding_price(papers, price_per_1k):
     enc = tiktoken.get_encoding("gpt2")
     num_tokens = 0
     for paper in tqdm(papers):
-        num_tokens += len(enc.encode(paper.embedding_text))
+        num_tokens += len(enc.encode(paper.embedding_text, disallowed_special=()))
     price = num_tokens / 1000 * price_per_1k
     return num_tokens, price
 

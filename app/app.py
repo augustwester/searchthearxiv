@@ -31,7 +31,7 @@ def search():
     # special logic for handling arxiv url queries
     if validators.url(query):
         arxiv_id = query.split("/")[-1]
-        matches = index.fetch([arxiv_id])["vectors"]
+        matches = index.fetch([arxiv_id]).vectors
         if len(matches) == 0:
             abstract = fetch_abstract(query)
             try:

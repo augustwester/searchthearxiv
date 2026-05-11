@@ -1,22 +1,22 @@
 [project]
 name = "searchthearxiv"
 version = "0.1.0"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-    "openai==1.69.0",
-    "pinecone-client==4.1.0",
+    "openai>=2.36,<3",
+    "pinecone>=6,<7",
 ]
 
 [project.optional-dependencies]
 app = [
-    "Flask==2.2.5",
+    "Flask>=3.1,<4",
     "requests-html==0.10.0",
-    "lxml==4.9.4",
-    "validators==0.20.0",
-    "gunicorn==20.1.0",
+    "lxml>=6.1,<7",
+    "validators>=0.35,<1",
+    "gunicorn>=26,<27",
 ]
 data = [
-    "tiktoken==0.1.1",
-    "tqdm==4.64.1",
-    "kaggle==1.5.13",
+    "tiktoken>=0.12,<1",
+    "tqdm>=4.67,<5",
+    "kaggle>=2.1,<3",
 ]

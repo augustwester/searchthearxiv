@@ -35,7 +35,7 @@ pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
 index = pc.Index(index_name)
 
 for chunk in chunks:
-    embeds = index.fetch([p["id"] for p in chunk])["vectors"]
+    embeds = index.fetch([p["id"] for p in chunk]).vectors
     for paper in tqdm(chunk):
         if paper["id"] in embeds:
             embed = embeds[paper["id"]]["values"]
