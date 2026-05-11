@@ -1,7 +1,0 @@
-Flask==2.2.5
-openai==1.69.0
-pinecone_client==4.1.0
-requests_html==0.10.0
-lxml==4.9.4
-validators==0.20.0
-gunicorn==20.1.0

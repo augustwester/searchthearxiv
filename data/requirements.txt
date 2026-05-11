@@ -1,5 +1,0 @@
-openai==1.69.0
-pinecone_client==4.1.0
-tiktoken==0.1.1
-tqdm==4.64.1
-kaggle==1.5.13

@@ -13,7 +13,7 @@ MODEL = "text-embedding-3-small"
 
 # connect to Pinecone
 pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
-index = pc.Index("searchthearxiv-v2")
+index = pc.Index(os.environ["PINECONE_INDEX_NAME"])
 
 @app.route("/")
 def home():
