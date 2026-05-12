@@ -5,11 +5,10 @@ from pinecone import Pinecone
 import validators
 from flask import render_template, request
 from helpers import get_matches, fetch_abstract, error
+from models import EMBEDDING_3_SMALL
 
 app = flask.Flask(__name__)
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-
-MODEL = "text-embedding-3-small"
 
 # connect to Pinecone
 pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
@@ -35,7 +34,7 @@ def search():
         if len(matches) == 0:
             abstract = fetch_abstract(query)
             try:
-                embed = client.embeddings.create(input=abstract, model=MODEL).data[0].embedding
+                embed = client.embeddings.create(input=abstract, model=EMBEDDING_3_SMALL.name).data[0].embedding
             except (AuthenticationError, RateLimitError, NotFoundError, APIError) as e:
                 print(f"OpenAI error when embedding abstract: {e}", flush=True)
                 return error("OpenAI not responding. Try again in a few minutes.")
@@ -48,7 +47,7 @@ def search():
     
     # embed query using OpenAI API
     try:
-        embed = client.embeddings.create(input=query, model=MODEL).data[0].embedding
+        embed = client.embeddings.create(input=query, model=EMBEDDING_3_SMALL.name).data[0].embedding
     except AuthenticationError as e:
         print(f"OpenAI authentication error: {e}", flush=True)
         return error("OpenAI authentication failed. Please check the API key.")
