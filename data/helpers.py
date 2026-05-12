@@ -1,7 +1,6 @@
 import json
 from openai import OpenAI
 import os
-import tiktoken
 from pinecone import Pinecone
 from tqdm import tqdm
 from paper import Paper
@@ -40,39 +39,35 @@ def pinecone_embedding_count(index_name):
     index = pc.Index(index_name)
     return index.describe_index_stats()["total_vector_count"]
 
-def estimate_embedding_price(papers, price_per_1k):
+def estimate_embedding_price(token_counts, model):
     """
-    Estimates the price of embedding the papers in `papers` using OpenAI's
-    tiktoken tokenizer.
+    Estimates the price of embedding papers from pre-computed token counts.
     
     Args:
-        papers: A list of `Paper` objects
-        price_per_1k: Price per 1000 tokens
+        token_counts: A list of token counts per paper
+        model: An `EmbeddingModel` instance
     
     Returns:
-        A tuple containing the estimated number of tokens and a price.
+        A tuple containing the total number of tokens and estimated price.
     """
-    enc = tiktoken.get_encoding("gpt2")
-    num_tokens = 0
-    for paper in tqdm(papers):
-        num_tokens += len(enc.encode(paper.embedding_text, disallowed_special=()))
-    price = num_tokens / 1000 * price_per_1k
+    num_tokens = sum(token_counts)
+    price = num_tokens / 1000 * model.price_per_1k_tokens
     return num_tokens, price
 
-def get_embeddings(texts, model="text-embedding-3-small"):
+def get_embeddings(texts, model):
     """
     Returns a list of embeddings for each string in `texts` using the OpenAI
     embedding model specified in `model`.
     
     Args:
         texts: A list of strings to embed
-        model: The name of the OpenAI embedding model to use
+        model: An `EmbeddingModel` instance
         
     Returns:
         A list of embeddings.
     """
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-    return client.embeddings.create(input=texts, model=model).data
+    return client.embeddings.create(input=texts, model=model.name).data
 
 def embed_and_upsert(papers, index_name, model, batch_size=50):
     """
@@ -83,7 +78,7 @@ def embed_and_upsert(papers, index_name, model, batch_size=50):
     Args:
         papers: The list of papers for which to embed their embedding text
         index_name: The name of the index in which the embeddings will be upserted
-        model: The name of the OpenAI embedding model to use
+        model: An `EmbeddingModel` instance
         batch_size: The batch size to use when upserting embeddings to Pinecone
     """
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
