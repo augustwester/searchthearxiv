@@ -4,7 +4,7 @@ This repo contains the implementation of [searchthearxiv.com](https://searchthea
 
 In order to run the code, you need to set the following list of environment variables:
 
-```
+```.env
 KAGGLE_USERNAME=your_kaggle_username
 KAGGLE_KEY=your_kaggle_api_key
 OPENAI_API_KEY=your_openai_api_key
