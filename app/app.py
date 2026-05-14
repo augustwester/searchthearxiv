@@ -22,6 +22,10 @@ def home():
 def about():
     return render_template("about.html")
 
+@app.route("/donate")
+def donate():
+    return render_template("donate.html")
+
 @app.route("/search")
 def search():
     query = request.args.get("query")

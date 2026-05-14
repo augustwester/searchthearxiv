@@ -1,3 +1,10 @@
+var PAPERS_PER_PAGE = 10;
+var papersShown = 0;
+var loadingMore = false;
+var currentSort = "similarity";
+var MONTH_ORDER = {"Jan":1,"Feb":2,"Mar":3,"Apr":4,"May":5,"Jun":6,"Jul":7,"Aug":8,"Sep":9,"Oct":10,"Nov":11,"Dec":12};
+var SORT_LABELS = {"similarity": "Similarity", "newest": "Newest", "oldest": "Oldest", "citations": "Citations"};
+
 $(window).bind("load", function () {
 	results = null;
 	currentTab = "papers";
@@ -62,15 +69,91 @@ $(window).bind("load", function () {
 			return false;
 		}
 	});
+
+	// Sort dropdown toggle
+	$("#sort_button").on("click", function (e) {
+		e.stopPropagation();
+		$("#sort_dropdown").toggle();
+	});
+
+	// Sort option selection
+	$(".sort_option").on("click", function (e) {
+		e.stopPropagation();
+		let sort = this.dataset.sort;
+		if (sort === currentSort) {
+			$("#sort_dropdown").hide();
+			return;
+		}
+		currentSort = sort;
+		$(".sort_option").removeClass("sort_option_active");
+		$(this).addClass("sort_option_active");
+		$("#sort_label").text(SORT_LABELS[sort]);
+		$("#sort_dropdown").hide();
+		sortPapers();
+
+		// Animate current cards out, then render new order in
+		if ($("#results").hasClass("move_up")) {
+			$("#results").removeClass("move_up");
+			$("#results").one("transitionend", function () {
+				addPapers(results["papers"]);
+				$("#results").addClass("move_up");
+			});
+		} else {
+			addPapers(results["papers"]);
+			$("#results").addClass("move_up");
+		}
+	});
+
+	// Native select sort (mobile)
+	$("#sort_select").on("change", function () {
+		let sort = $(this).val();
+		if (sort === currentSort) return;
+		currentSort = sort;
+		$(".sort_option").removeClass("sort_option_active");
+		$(`.sort_option[data-sort="${sort}"]`).addClass("sort_option_active");
+		$("#sort_label").text(SORT_LABELS[sort]);
+		sortPapers();
+
+		if ($("#results").hasClass("move_up")) {
+			$("#results").removeClass("move_up");
+			$("#results").one("transitionend", function () {
+				addPapers(results["papers"]);
+				$("#results").addClass("move_up");
+			});
+		} else {
+			addPapers(results["papers"]);
+			$("#results").addClass("move_up");
+		}
+	});
+
+	// Close sort dropdown when clicking outside
+	$(document).on("click", function () {
+		$("#sort_dropdown").hide();
+	});
+	$("#sort_container").on("click", function (e) {
+		e.stopPropagation();
+	});
+
+	// Infinite scroll: load more papers when near bottom
+	$(window).on("scroll", function () {
+		if (currentTab !== "papers" || results == null) return;
+		if (papersShown >= results["papers"].length) return;
+		let scrollBottom = $(window).scrollTop() + $(window).height();
+		let docHeight = $(document).height();
+		if (docHeight - scrollBottom < 200) {
+			showMorePapers();
+		}
+	});
 });
 
 function togglePapersTab(animated) {
 	$('[data-tab="papers"]').first().addClass("toggle_enabled");
 	$('[data-tab="people"]').first().removeClass("toggle_enabled");
+	$("#sort_container").show();
 	if (animated) {
 		if ($("#results").hasClass("move_up")) {
 			$("#results").removeClass("move_up");
-			$("#results").on("transitionend", function () {
+			$("#results").one("transitionend", function () {
 				addPapers(results["papers"]);
 				$("#results").addClass("move_up");
 			});
@@ -89,10 +172,11 @@ function togglePapersTab(animated) {
 function togglePeopleTab(animated) {
 	$('[data-tab="people"]').first().addClass("toggle_enabled");
 	$('[data-tab="papers"]').first().removeClass("toggle_enabled");
+	$("#sort_container").hide();
 	if (animated) {
 		if ($("#results").hasClass("move_up")) {
 			$("#results").removeClass("move_up");
-			$("#results").on("transitionend", function () {
+			$("#results").one("transitionend", function () {
 				addAuthors(results["authors"]);
 				$("#results").addClass("move_up");
 			});
@@ -126,9 +210,22 @@ function performSearch() {
 		field.readOnly = false;
 		if (data["error"] == null) {
 			results = data;
+			resetSort();
 			updateGetParameter(queryVal, currentTab);
 			$("#error_container").hide();
 			$("#tip").hide();
+			if (data["citation_error"] != null) {
+				$("#warning_text").text(data["citation_error"]);
+				$("#warning_container").show();
+				$('.sort_option[data-sort="citations"]').hide();
+				$('#sort_select option[value="citations"]').remove();
+			} else {
+				$("#warning_container").hide();
+				$('.sort_option[data-sort="citations"]').show();
+				if ($('#sort_select option[value="citations"]').length === 0) {
+					$('<option value="citations">Citations</option>').insertAfter('#sort_select option[value="similarity"]');
+				}
+			}
 			if (currentTab == "people") {
 				togglePeopleTab(true);
 			} else {
@@ -139,6 +236,7 @@ function performSearch() {
 		} else {
 			$("#error_text").text(data["error"]);
 			$("#error_container").show();
+			$("#warning_container").hide();
 		}
 	});
 }
@@ -171,6 +269,39 @@ function renderMath() {
 	renderMathInElement(document.body, { delimiters: config });
 }
 
+function resetSort() {
+	currentSort = "similarity";
+	$(".sort_option").removeClass("sort_option_active");
+	$('.sort_option[data-sort="similarity"]').addClass("sort_option_active");
+	$("#sort_label").text(SORT_LABELS["similarity"]);
+	$("#sort_select").val("similarity");
+	$("#sort_dropdown").hide();
+}
+
+function sortPapers() {
+	if (results == null) return;
+	let papers = results["papers"];
+	if (currentSort === "similarity") {
+		papers.sort((a, b) => b.score - a.score);
+	} else if (currentSort === "newest") {
+		papers.sort((a, b) => {
+			if (b.year !== a.year) return b.year - a.year;
+			return (MONTH_ORDER[b.month] || 0) - (MONTH_ORDER[a.month] || 0);
+		});
+	} else if (currentSort === "oldest") {
+		papers.sort((a, b) => {
+			if (a.year !== b.year) return a.year - b.year;
+			return (MONTH_ORDER[a.month] || 0) - (MONTH_ORDER[b.month] || 0);
+		});
+	} else if (currentSort === "citations") {
+		papers.sort((a, b) => {
+			let ac = a.citation_count != null ? a.citation_count : -1;
+			let bc = b.citation_count != null ? b.citation_count : -1;
+			return bc - ac;
+		});
+	}
+}
+
 function resultClicked(e) {
 	$(e).removeClass("result_clickable");
 	$(e).find(".result_abstract").removeClass("truncated_text");
@@ -179,23 +310,46 @@ function resultClicked(e) {
 
 function addPapers(data) {
 	$("#results").empty();
-	var html = "";
-	data.forEach(e => {
-		html += addPaper(e)
-	})
-	$("#results").append(html);
+	papersShown = 0;
+	showMorePapers();
 	$("#results").addClass("move_up");
-	renderMath();
 }
 
-function addPaper(result) {
+function showMorePapers() {
+	if (results == null || loadingMore) return;
+	let papers = results["papers"];
+	if (papersShown >= papers.length) return;
+
+	loadingMore = true;
+	let nextBatch = papers.slice(papersShown, papersShown + PAPERS_PER_PAGE);
+	var html = "";
+	nextBatch.forEach((e, i) => {
+		html += addPaper(e, i);
+	});
+	$("#results").append(html);
+	papersShown += nextBatch.length;
+	renderMath();
+	loadingMore = false;
+}
+
+function addPaper(result, index) {
 	let dotClass = result.score >= 0.80 ? "dot_green" : "dot_orange";
-	return `<div class="search_result result_clickable" onclick="resultClicked(this)">
+	let citationHtml = "";
+	if (result.citation_count != null) {
+		let count = result.citation_count.toLocaleString();
+		let label = result.citation_count === 1 ? "citation" : "citations";
+		citationHtml = `<div class="result_citations" title="Citation count from Semantic Scholar"><p>${count} ${label}</p></div>`;
+	}
+	let delay = (index || 0) * 40;
+	return `<div class="search_result result_clickable paper_appear" style="animation-delay: ${delay}ms" onclick="resultClicked(this)">
     <div class="result_top">
     <div class="result_year black"><p>${result.month} ${result.year}</p></div>
+    <div class="result_top_right">
+    ${citationHtml}
     <div class="result_score black" title="Cosine similarity">
         <p>${result.score}</p>
         <div class="result_dot ${dotClass}"></div>
+    </div>
     </div>
     </div>
     <p class="result_title black">

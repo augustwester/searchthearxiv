@@ -23,13 +23,92 @@ p, a {
 #toggle_flex {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    justify-content: space-between;
     align-items: center;
     margin: 0 auto;
     margin-top: 50px;
     margin-bottom: 25px;
     width: 100%;
     max-width: 780px;
+}
+
+#toggle_tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+#sort_container {
+    position: relative;
+}
+
+#sort_select {
+    display: none;
+}
+
+#sort_button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 5px 10px;
+    user-select: none;
+    background-color: rgba(0,0,0,0.25);
+    min-width: 70px;
+}
+
+#sort_icon {
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    -webkit-mask-image: url(/static/sort-symbol.svg);
+    mask-image: url(/static/sort-symbol.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    flex-shrink: 0;
+}
+
+#sort_button p {
+    font-family: "Roboto Mono";
+    font-size: 14px;
+    font-weight: medium;
+    color: white;
+    text-align: center;
+}
+
+#sort_dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 5px;
+    background-color: white;
+    border: 1px solid rgb(215,215,215);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    z-index: 10;
+    min-width: 140px;
+}
+
+.sort_option {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.sort_option:hover {
+    background-color: rgba(0,0,0,0.04);
+}
+
+.sort_option p {
+    font-family: "Roboto Mono";
+    font-size: 13px;
+    color: black;
+    white-space: nowrap;
+}
+
+.sort_option_active p {
+    font-weight: 500;
 }
 
 .toggle {
@@ -128,6 +207,24 @@ p, a {
 	}
 }
 
+@keyframes paper_fade_in {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	} to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.paper_appear {
+	opacity: 0;
+	animation-name: paper_fade_in;
+	animation-duration: 0.4s;
+	animation-timing-function: ease-in-out;
+	animation-fill-mode: forwards;
+}
+
 #query_field {
     display: block;
     width: 100%;
@@ -162,30 +259,47 @@ p, a {
 
 #error_container {
     display: none;
-    margin-bottom: 50px;
-}
-
-#error_flex {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    max-width: 780px;
+    width: 100%;
+    box-sizing: border-box;
     margin: 0 auto;
-    gap: 15px;
     margin-top: 50px;
-}
-
-#error_symbol {
-    width: 20px;
-    height: 20px;
-    background-image: url(/static/error-symbol.svg);
-    background-size: cover;
+    padding: 12px 25px;
+    background-color: rgb(255, 235, 235);
+    border: 1px solid rgb(230, 150, 150);
 }
 
 #error_text {
     font-family: "Roboto Mono";
-    color: rgb(255,59,48);
-    text-align: left;
+    font-size: 13px;
+    color: rgb(180, 40, 30);
+    text-align: center;
+}
+
+#warning_container {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background-color: rgb(255, 248, 230);
+    border: 1px solid rgb(230, 200, 120);
+}
+
+#warning_flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#warning_text {
+    font-family: "Roboto Mono";
+    font-size: 13px;
+    color: rgb(140, 100, 10);
+    text-align: center;
 }
 
 #results {
@@ -236,6 +350,19 @@ p, a {
 .result_year {
     font-weight: medium;
     font-size: 16px;
+    color: darkgray;
+}
+
+.result_top_right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.result_citations p {
+    font-size: 12px;
+    font-weight: medium;
     color: darkgray;
 }
 
@@ -479,8 +606,22 @@ p, a {
         color: rgba(255,255,255,0.3);
     }
 
+    #error_container {
+        background-color: rgb(60, 20, 20);
+        border: 1px solid rgb(120, 40, 40);
+    }
+
     #error_text {
-        color: rgb(255,69,58);
+        color: rgb(255, 120, 110);
+    }
+
+    #warning_container {
+        background-color: rgb(60, 50, 20);
+        border: 1px solid rgb(120, 100, 40);
+    }
+
+    #warning_text {
+        color: rgb(240, 210, 100);
     }
 
     .toggle {
@@ -533,6 +674,32 @@ p, a {
         background-color: rgb(50,50,50);
     }
 
+    #sort_button {
+        background-color: rgba(255,255,255,0.35);
+    }
+
+    #sort_button p {
+        color: black;
+    }
+
+    #sort_icon {
+        background-color: black;
+    }
+
+    #sort_dropdown {
+        background-color: rgb(30,30,30);
+        border: 1px solid rgb(115,115,115);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .sort_option:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    .sort_option p {
+        color: white;
+    }
+
     .code {
         background-color:rgba(250,250,250, 0.25);
         border: 1px solid rgba(255,255,255,0.5);
@@ -546,20 +713,36 @@ p, a {
 }
 
 @media screen and (max-width:768px) {
-    #error_flex {
-        flex-direction: column;
-    }
-
-    #error_text {
-        text-align: center;
-    }
-
     #authors_flex {
         flex-direction: column;
     }
     
     .author_container {
         width: 100%;
+    }
+
+    #sort_button {
+        display: flex;
+        min-width: auto;
+    }
+
+    #sort_label {
+        display: none;
+    }
+
+    #sort_dropdown {
+        display: none !important;
+    }
+
+    #sort_select {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
     }
 }
 

@@ -14,3 +14,5 @@ class Paper(dict):
         
         authors_parsed = self.authors.split(",")
         self.authors_parsed = [author.strip() for author in authors_parsed]
+        
+        self.citation_count = None

@@ -18,15 +18,17 @@
       <a id="logo" href="/"><span class="black">search</span><span class="gray">the</span><span class="red">arXiv</span></a>
       <div id="right_header">
         <a class="header_link" href="about"><span class="black">about</span></a>
+        <a class="header_link" href="donate"><span class="black">donate</span></a>
       </div>
     </div>
     <div id="container" style="margin-bottom:50px;">
       <p id="about_title" class="black">about</p>
-      <p class="about_text black">search the arXiv uses OpenAI's <span class="code">text-embedding-ada-002</span> model to embed the abstract of over 300,000 machine learning papers from arXiv. The papers are regularly sourced from the <a href="https://www.kaggle.com/datasets/Cornell-University/arxiv" target="_blank">arXiv metadataset over on Kaggle</a> and filtered to include only those belonging to</p>
+      <p class="about_text black">search the arXiv uses OpenAI's <span class="code">text-embedding-ada-002</span> model to embed the abstract of over 500,000 machine learning papers from arXiv. The papers are regularly sourced from the <a href="https://www.kaggle.com/datasets/Cornell-University/arxiv" target="_blank">arXiv metadataset over on Kaggle</a> and filtered to include only those belonging to</p>
       <p class="about_text black">
         cs.CV, cs.LG, cs.CL, cs.AI, cs.NE, cs.RO
       </p>
-      <p class="about_text black">When you perform a search, your query is embedded using the same model after which the 10 papers with the highest cosine similarity to the query embedding are returned.</p>
+      <p class="about_text black">When you perform a search, your query is embedded using the same model after which the 100 papers with the highest cosine similarity to the query embedding are returned. The papers can then be sorted by similarity, citation count, or date.</p>
+      <p class="about_text black">Citation counts are sourced from the <a href="https://www.semanticscholar.org/" target="_blank">Semantic Scholar</a> API.</p>
       <p class="about_text black">This is a personal project meant as an experiment more than anything else. You can find the source code on <a href="https://github.com/augustwester/searchthearxiv" target="_blank">GitHub</a>, the embeddings on <a href="https://www.kaggle.com/datasets/awester/arxiv-embeddings" target="_blank">Kaggle</a>, and me on <a href="https://twitter.com/augustwester" target="_blank">Twitter</a> 🤗</p>
     </div>
   </body>
