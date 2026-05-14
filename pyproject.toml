@@ -39,14 +39,17 @@ select = [
     "I",     # isort (import sorting)
     "N",     # pep8-naming
     "UP",    # pyupgrade
+    "ANN",   # flake8-annotations (require type hints)
     "B",     # flake8-bugbear
     "SIM",   # flake8-simplify
     "TCH",   # flake8-type-checking
+    "T201",  # flake8-print (no print statements)
     "RUF",   # ruff-specific rules
 ]
 ignore = [
-    "E501",  # line too long (handled by formatter)
+    "ANN204",  # missing return type annotation for special method
 ]
+per-file-ignores = {"data/update_kaggle.py" = ["T201"]}
 
 [tool.ruff.lint.isort]
 known-first-party = ["app", "data"]
