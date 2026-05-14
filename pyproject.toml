@@ -12,6 +12,7 @@ app = [
     "Flask>=3.1,<4",
     "requests-html==0.10.0",
     "lxml>=6.1,<7",
+    "lxml_html_clean",
     "validators>=0.35,<1",
     "gunicorn>=26,<27",
 ]

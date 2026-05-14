@@ -9,9 +9,9 @@ class EmbeddingModel:
     price_per_1k_tokens: float
 
 
-EMBEDDING_3_SMALL = EmbeddingModel(
-    name="text-embedding-3-small",
+EMBEDDING_ADA_002 = EmbeddingModel(
+    name="text-embedding-ada-002",
     tokenizer="cl100k_base",
-    max_tokens=8192,
-    price_per_1k_tokens=0.00002,
+    max_tokens=8191,
+    price_per_1k_tokens=0.0001,
 )
