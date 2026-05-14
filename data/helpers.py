@@ -1,9 +1,11 @@
 import json
-from openai import OpenAI
 import os
+
+from openai import OpenAI
+from paper import Paper
 from pinecone import Pinecone
 from tqdm import tqdm
-from paper import Paper
+
 
 def load_data(file_path, categories, start_year):
     """
@@ -18,7 +20,7 @@ def load_data(file_path, categories, start_year):
     Returns:
         A generator over the papers satisfying the criteria.
     """
-    json_file = open(file_path, "r", encoding="utf-8")
+    json_file = open(file_path, encoding="utf-8")
     papers = (Paper(json.loads(line)) for line in json_file)
     papers = (paper for paper in papers
               if paper.has_category(categories) and paper.has_valid_id)
@@ -87,7 +89,7 @@ def embed_and_upsert(papers, index_name, model, batch_size=50):
             batch = papers[i:i+batch_size]
             texts = [paper.embedding_text for paper in batch]
             embed_data = get_embeddings(texts, model)
-        
+
             pc_data = [(p.id, e.embedding, p.metadata)
                        for p, e in zip(batch, embed_data, strict=True)]
             index.upsert(pc_data)

@@ -1,22 +1,22 @@
 class Paper:
     def __init__(self, dict):
         super().__init__()
-        
+
         self.id = dict["id"]
         self.categories = dict["categories"].lower().split()
-        
+
         # remove line breaks and excess whitespace in titles
         title = dict["title"].replace("\n", " ")
         self.title = " ".join(title.split())
-    
+
         # remove line breaks and excess whitespace in abstracts
         abstract = dict["abstract"].replace("\n", " ")
         self.abstract = " ".join(abstract.split())
-    
+
         # retrieve month and year from first published date
         self.month = dict["versions"][0]["created"].split()[2]
         self.year = int(dict["versions"][0]["created"].split()[3])
-        
+
         # ensure first names are first, last names last, and no spaces
         authors_parsed = dict["authors_parsed"]
         authors = [author[::-1][1:] for author in authors_parsed]
@@ -38,7 +38,7 @@ class Paper:
             if category in self.categories:
                 return True
         return False
-    
+
     @property
     def embedding_text(self):
         """
@@ -50,7 +50,7 @@ class Paper:
                 "From: " + str(self.year),
                 "Abstract: " + self.abstract]
         return ". ".join(text)
-    
+
     @property
     def metadata(self):
         return {"title": self.title,
@@ -58,7 +58,7 @@ class Paper:
                 "abstract": self.abstract,
                 "year": self.year,
                 "month": self.month}
-    
+
     @property
     def has_valid_id(self):
         invalid_id = self.id.isupper() or self.id.islower()

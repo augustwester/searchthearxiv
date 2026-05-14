@@ -2,9 +2,10 @@ import json
 import time
 import urllib.error
 import urllib.request
+from collections import defaultdict
+
 from paper import Paper
 from requests_html import HTMLSession
-from collections import defaultdict
 
 SEMANTIC_SCHOLAR_BATCH_URL = "https://api.semanticscholar.org/graph/v1/paper/batch?fields=citationCount"
 SEMANTIC_SCHOLAR_MAX_RETRIES = 3
@@ -72,7 +73,7 @@ def get_matches(index, k, vector=None, id=None, exclude=None):
     matches = top_k["matches"]
     papers = [Paper(match) for match in matches if match["id"] != exclude]
     authors = get_authors(papers)
-    
+
     top_papers = papers
     citation_counts = get_citation_counts([p.id for p in top_papers])
     citation_error = None
@@ -81,7 +82,7 @@ def get_matches(index, k, vector=None, id=None, exclude=None):
         citation_counts = {}
     for paper in top_papers:
         paper.citation_count = citation_counts.get(paper.id)
-    
+
     papers = [paper.__dict__ for paper in top_papers]
     result = {"papers": papers, "authors": authors}
     if citation_error:

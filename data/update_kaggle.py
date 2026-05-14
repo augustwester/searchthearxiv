@@ -1,8 +1,9 @@
-import os
 import json
-from pinecone import Pinecone
-from paper import Paper
+import os
+
 from helpers import pinecone_embedding_count
+from paper import Paper
+from pinecone import Pinecone
 from tqdm import tqdm
 
 print("Preparing Kaggle dataset update...")
@@ -21,7 +22,7 @@ num_new = num_pinecone - num_kaggle
 print(f"Found {num_new} new papers")
 
 print("Loading metadata for new papers...")
-arxiv_file = open(ARXIV_FILE_PATH, "r", encoding="utf-8")
+arxiv_file = open(ARXIV_FILE_PATH, encoding="utf-8")
 papers = (json.loads(line) for line in arxiv_file)
 papers = (paper for paper in papers
           if Paper(paper).has_category(CATEGORIES) and Paper(paper).has_valid_id)

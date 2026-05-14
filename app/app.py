@@ -1,11 +1,12 @@
-import flask
-from openai import OpenAI, AuthenticationError, RateLimitError, NotFoundError, APIError
 import os
-from pinecone import Pinecone
+
+import flask
 import validators
 from flask import render_template, request
-from helpers import get_matches, fetch_abstract, error
+from helpers import error, fetch_abstract, get_matches
 from models import EMBEDDING_ADA_002
+from openai import APIError, AuthenticationError, NotFoundError, OpenAI, RateLimitError
+from pinecone import Pinecone
 
 app = flask.Flask(__name__)
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -30,7 +31,7 @@ def donate():
 def search():
     query = request.args.get("query")
     K = 100 # number of matches to request from Pinecone
-    
+
     # special logic for handling arxiv url queries
     if validators.url(query):
         arxiv_id = query.split("/")[-1]
@@ -44,11 +45,11 @@ def search():
                 return error("OpenAI not responding. Try again in a few minutes.")
             return get_matches(index, K, vector=embed, exclude=arxiv_id)
         return get_matches(index, K, id=arxiv_id, exclude=arxiv_id)
-    
+
     # reject natural language queries longer than 200 characters
     if len(query) > 200:
         return error("Sorry! The length of your query cannot exceed 200 characters.")
-    
+
     # embed query using OpenAI API
     try:
         embed = client.embeddings.create(input=query, model=EMBEDDING_ADA_002.name).data[0].embedding
@@ -67,7 +68,7 @@ def search():
     except Exception as e:
         print(f"Unexpected error when fetching embedding from OpenAI: {e}", flush=True)
         return error("An unexpected error occurred. Try again in a few minutes.")
-    
+
     # once we have the query embedding, find closest matches in Pinecone
     try:
         return get_matches(index, K, vector=embed)
@@ -77,6 +78,6 @@ def search():
 
 @app.route("/robots.txt")
 def robots():
-    with open("static/robots.txt", "r") as f:
+    with open("static/robots.txt") as f:
         content = f.read()
     return content
