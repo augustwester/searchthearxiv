@@ -85,6 +85,7 @@ $(window).bind("load", function () {
 			return;
 		}
 		currentSort = sort;
+		localStorage.setItem("sortPreference", sort);
 		$(".sort_option").removeClass("sort_option_active");
 		$(this).addClass("sort_option_active");
 		$("#sort_label").text(SORT_LABELS[sort]);
@@ -109,6 +110,7 @@ $(window).bind("load", function () {
 		let sort = $(this).val();
 		if (sort === currentSort) return;
 		currentSort = sort;
+		localStorage.setItem("sortPreference", sort);
 		$(".sort_option").removeClass("sort_option_active");
 		$(`.sort_option[data-sort="${sort}"]`).addClass("sort_option_active");
 		$("#sort_label").text(SORT_LABELS[sort]);
@@ -219,6 +221,13 @@ function performSearch() {
 				$("#warning_container").show();
 				$('.sort_option[data-sort="citations"]').hide();
 				$('#sort_select option[value="citations"]').remove();
+				if (currentSort === "citations") {
+					currentSort = "similarity";
+					$(".sort_option").removeClass("sort_option_active");
+					$('.sort_option[data-sort="similarity"]').addClass("sort_option_active");
+					$("#sort_label").text(SORT_LABELS["similarity"]);
+					$("#sort_select").val("similarity");
+				}
 			} else {
 				$("#warning_container").hide();
 				$('.sort_option[data-sort="citations"]').show();
@@ -270,12 +279,16 @@ function renderMath() {
 }
 
 function resetSort() {
-	currentSort = "similarity";
+	let saved = localStorage.getItem("sortPreference");
+	currentSort = saved && SORT_LABELS[saved] ? saved : "similarity";
 	$(".sort_option").removeClass("sort_option_active");
-	$('.sort_option[data-sort="similarity"]').addClass("sort_option_active");
-	$("#sort_label").text(SORT_LABELS["similarity"]);
-	$("#sort_select").val("similarity");
+	$(`.sort_option[data-sort="${currentSort}"]`).addClass("sort_option_active");
+	$("#sort_label").text(SORT_LABELS[currentSort]);
+	$("#sort_select").val(currentSort);
 	$("#sort_dropdown").hide();
+	if (currentSort !== "similarity") {
+		sortPapers();
+	}
 }
 
 function sortPapers() {
