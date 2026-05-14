@@ -8,6 +8,7 @@ COPY pyproject.toml uv.lock ./
 COPY data/paper.py data/embed.py data/helpers.py data/models.py ./
 COPY data/setup_kaggle.py data/update_kaggle.py data/run.sh ./
 
-RUN uv pip install --system --extra data .
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
+RUN uv sync --extra data --no-dev
 
-CMD sh run.sh
+CMD ["sh", "run.sh"]

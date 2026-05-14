@@ -7,6 +7,7 @@ COPY app/app.py app/helpers.py app/paper.py app/models.py ./
 COPY app/static static/
 COPY app/templates templates/
 
-RUN uv pip install --system --extra app .
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
+RUN uv sync --extra app --no-dev
 
-CMD gunicorn --bind 0.0.0.0:8000 app:app
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
