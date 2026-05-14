@@ -4,14 +4,30 @@ var loadingMore = false;
 var currentSort = "similarity";
 var MONTH_ORDER = {"Jan":1,"Feb":2,"Mar":3,"Apr":4,"May":5,"Jun":6,"Jul":7,"Aug":8,"Sep":9,"Oct":10,"Nov":11,"Dec":12};
 var SORT_LABELS = {"similarity": "Similarity", "newest": "Newest", "oldest": "Oldest", "citations": "Citations"};
+var PLACEHOLDERS = [
+	"model using only attention mechanism",
+	"generating images from text descriptions",
+	"learning visual features without any labels",
+	"teaching a computer to play Atari games",
+	"beating the world champion at Go",
+	"understanding text by predicting masked words",
+	"reducing dimensions while preserving structure",
+	"dropout as a way to regularize neural networks",
+	"normalizing layer activations to train faster",
+	"learning word embeddings by predicting context"
+];
 
 $(window).bind("load", function () {
 	results = null;
 	currentTab = "papers";
 
 	f = document.getElementById("query_field");
+	var placeholder = PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)];
+	f.setAttribute("placeholder", placeholder);
+	f.value = placeholder;
 	f.style.height = "0px";
 	f.style.height = f.scrollHeight + "px";
+	f.value = "";
 
 	// Making the textfield and placeholder act nice on iOS.
 	$("#query_field").focus(function () {
