@@ -17,6 +17,35 @@ var PLACEHOLDERS = [
 	"learning word embeddings by predicting context"
 ];
 
+function openSortDropdown() {
+	var dd = $("#sort_dropdown");
+	dd.addClass("sort_dropdown_visible");
+	requestAnimationFrame(function () {
+		requestAnimationFrame(function () {
+			dd.addClass("sort_dropdown_open");
+		});
+	});
+}
+
+function closeSortDropdown() {
+	var dd = $("#sort_dropdown");
+	if (!dd.hasClass("sort_dropdown_visible")) return;
+	dd.removeClass("sort_dropdown_open");
+	setTimeout(function () {
+		if (!dd.hasClass("sort_dropdown_open")) {
+			dd.removeClass("sort_dropdown_visible");
+		}
+	}, 170);
+}
+
+function toggleSortDropdown() {
+	if ($("#sort_dropdown").hasClass("sort_dropdown_visible")) {
+		closeSortDropdown();
+	} else {
+		openSortDropdown();
+	}
+}
+
 $(window).bind("load", function () {
 	results = null;
 	currentTab = "papers";
@@ -89,7 +118,7 @@ $(window).bind("load", function () {
 	// Sort dropdown toggle
 	$("#sort_button").on("click", function (e) {
 		e.stopPropagation();
-		$("#sort_dropdown").toggle();
+		toggleSortDropdown();
 	});
 
 	// Sort option selection
@@ -97,7 +126,7 @@ $(window).bind("load", function () {
 		e.stopPropagation();
 		let sort = this.dataset.sort;
 		if (sort === currentSort) {
-			$("#sort_dropdown").hide();
+			closeSortDropdown();
 			return;
 		}
 		currentSort = sort;
@@ -105,7 +134,7 @@ $(window).bind("load", function () {
 		$(".sort_option").removeClass("sort_option_active");
 		$(this).addClass("sort_option_active");
 		$("#sort_label").text(SORT_LABELS[sort]);
-		$("#sort_dropdown").hide();
+		$("#sort_dropdown").removeClass("sort_dropdown_visible sort_dropdown_open");
 		sortPapers();
 
 		// Animate current cards out, then render new order in
@@ -146,7 +175,7 @@ $(window).bind("load", function () {
 
 	// Close sort dropdown when clicking outside
 	$(document).on("click", function () {
-		$("#sort_dropdown").hide();
+		closeSortDropdown();
 	});
 	$("#sort_container").on("click", function (e) {
 		e.stopPropagation();
@@ -228,6 +257,7 @@ function performSearch() {
 		field.readOnly = false;
 		if (data["error"] == null) {
 			results = data;
+			results["papers"].forEach((p, i) => p._originalIndex = i);
 			resetSort();
 			updateGetParameter(queryVal, currentTab);
 			$("#error_container").hide();
@@ -301,7 +331,7 @@ function resetSort() {
 	$(`.sort_option[data-sort="${currentSort}"]`).addClass("sort_option_active");
 	$("#sort_label").text(SORT_LABELS[currentSort]);
 	$("#sort_select").val(currentSort);
-	$("#sort_dropdown").hide();
+	$("#sort_dropdown").removeClass("sort_dropdown_visible sort_dropdown_open");
 	if (currentSort !== "similarity") {
 		sortPapers();
 	}
@@ -311,7 +341,7 @@ function sortPapers() {
 	if (results == null) return;
 	let papers = results["papers"];
 	if (currentSort === "similarity") {
-		papers.sort((a, b) => b.score - a.score);
+		papers.sort((a, b) => b.score - a.score || a._originalIndex - b._originalIndex);
 	} else if (currentSort === "newest") {
 		papers.sort((a, b) => {
 			if (b.year !== a.year) return b.year - a.year;

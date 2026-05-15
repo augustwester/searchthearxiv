@@ -89,11 +89,28 @@ p, a {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     z-index: 10;
     min-width: 140px;
+    border-radius: 8px;
+    padding: 4px 0;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 150ms ease, transform 150ms ease;
+}
+
+#sort_dropdown.sort_dropdown_visible {
+    display: block;
+}
+
+#sort_dropdown.sort_dropdown_open {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .sort_option {
     padding: 8px 16px;
     cursor: pointer;
+    border-radius: 4px;
+    margin: 0 4px;
+    transition: background-color 100ms ease;
 }
 
 .sort_option:hover {
@@ -107,8 +124,17 @@ p, a {
     white-space: nowrap;
 }
 
+.sort_option_active {
+    background-color: black;
+}
+
+.sort_option_active:hover {
+    background-color: black;
+}
+
 .sort_option_active p {
     font-weight: 500;
+    color: white;
 }
 
 .toggle {
@@ -694,6 +720,18 @@ p, a {
 
     .sort_option:hover {
         background-color: rgba(255,255,255,0.1);
+    }
+
+    .sort_option_active {
+        background-color: white;
+    }
+
+    .sort_option_active:hover {
+        background-color: white;
+    }
+
+    .sort_option_active p {
+        color: black;
     }
 
     .sort_option p {
