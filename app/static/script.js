@@ -136,6 +136,8 @@ $(window).bind("load", function () {
 		$("#sort_label").text(SORT_LABELS[sort]);
 		$("#sort_dropdown").removeClass("sort_dropdown_visible sort_dropdown_open");
 		sortPapers();
+		let queryVal = findGetParameter("q");
+		if (queryVal) updateGetParameter(queryVal, currentTab, currentSort);
 
 		// Animate current cards out, then render new order in
 		if ($("#results").hasClass("move_up")) {
@@ -160,6 +162,8 @@ $(window).bind("load", function () {
 		$(`.sort_option[data-sort="${sort}"]`).addClass("sort_option_active");
 		$("#sort_label").text(SORT_LABELS[sort]);
 		sortPapers();
+		let queryVal = findGetParameter("q");
+		if (queryVal) updateGetParameter(queryVal, currentTab, currentSort);
 
 		if ($("#results").hasClass("move_up")) {
 			$("#results").removeClass("move_up");
@@ -213,7 +217,7 @@ function togglePapersTab(animated) {
 	}
 	queryVal = findGetParameter("q");
 	currentTab = "papers";
-	updateGetParameter(queryVal, currentTab);
+	updateGetParameter(queryVal, currentTab, currentSort);
 }
 
 function togglePeopleTab(animated) {
@@ -236,7 +240,7 @@ function togglePeopleTab(animated) {
 	}
 	queryVal = findGetParameter("q");
 	currentTab = "people";
-	updateGetParameter(queryVal, currentTab);
+	updateGetParameter(queryVal, currentTab, currentSort);
 }
 
 function performSearch() {
@@ -259,7 +263,7 @@ function performSearch() {
 			results = data;
 			results["papers"].forEach((p, i) => p._originalIndex = i);
 			resetSort();
-			updateGetParameter(queryVal, currentTab);
+			updateGetParameter(queryVal, currentTab, currentSort);
 			$("#error_container").hide();
 			$("#tip").hide();
 			if (data["citation_error"] != null) {
@@ -308,13 +312,14 @@ function findGetParameter(parameterName) {
 	return result;
 }
 
-function updateGetParameter(query, tab) {
+function updateGetParameter(query, tab, sort) {
 	protocol = window.location.protocol + "//";
 	host = window.location.host;
 	pathname = window.location.pathname;
 	queryParam = `?q=${encodeURIComponent(query)}`
 	tabParam = `&tab=${encodeURIComponent(tab)}`
-	newUrl = protocol + host + pathname + queryParam + tabParam
+	sortParam = sort && sort !== "similarity" ? `&sort=${encodeURIComponent(sort)}` : ""
+	newUrl = protocol + host + pathname + queryParam + tabParam + sortParam
 	window.history.pushState({ path: newUrl }, '', newUrl);
 }
 
@@ -325,8 +330,9 @@ function renderMath() {
 }
 
 function resetSort() {
+	let urlSort = findGetParameter("sort");
 	let saved = localStorage.getItem("sortPreference");
-	currentSort = saved && SORT_LABELS[saved] ? saved : "similarity";
+	currentSort = urlSort && SORT_LABELS[urlSort] ? urlSort : saved && SORT_LABELS[saved] ? saved : "similarity";
 	$(".sort_option").removeClass("sort_option_active");
 	$(`.sort_option[data-sort="${currentSort}"]`).addClass("sort_option_active");
 	$("#sort_label").text(SORT_LABELS[currentSort]);
