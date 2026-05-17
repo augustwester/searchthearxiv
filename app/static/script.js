@@ -252,6 +252,9 @@ function performSearch() {
 
 	let queryVal = $('textarea[name="query"]').val();
 
+	// Log search event to Google Analytics (without query content)
+	gtag('event', 'search_performed');
+
 	// Submit request to backend
 	$.getJSON("/search", {
 		query: queryVal
